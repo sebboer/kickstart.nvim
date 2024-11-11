@@ -102,7 +102,7 @@ vim.g.have_nerd_font = false
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -167,6 +167,11 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagn
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
+-- Tab keymaps
+vim.keymap.set('n', '<C-t>', '<cmd>tabnew<cr>', { desc = 'New [T]ab' })
+vim.keymap.set('n', '<C-h>', '<cmd>tabprevious<cr>', { desc = 'Tab previous' })
+vim.keymap.set('n', '<C-l>', '<cmd>tabnext<cr>', { desc = 'Tab next' })
+
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
@@ -185,8 +190,8 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 --  Use CTRL+<hjkl> to switch between windows
 --
 --  See `:help wincmd` for a list of all window commands
-vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
+--vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
+--vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
@@ -226,6 +231,8 @@ vim.opt.rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
+
+  'RaafatTurki/hex.nvim',
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
   -- NOTE: Plugins can also be added by using a table,
@@ -236,6 +243,28 @@ require('lazy').setup({
   --
   --  This is equivalent to:
   --    require('Comment').setup({})
+
+  {
+    'pmizio/typescript-tools.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
+    opts = {},
+  },
+
+  {
+    'luukvbaal/nnn.nvim',
+    opts = {},
+    config = function()
+      require('nnn').setup {
+        picker = {
+          cmd = 'nnn -doA',
+        },
+      }
+
+      -- vim.keymap.set('n', '<leader>n', '<cmd>NnnPicker<CR>', { desc = 'open nnn' })
+      vim.keymap.set('n', '<leader>n', '<cmd>NnnPicker<CR>', { desc = 'open nnn' })
+      vim.keymap.set('n', '<C-g>', '<cmd>NnnPicker<CR>', { desc = 'open nnn' })
+    end,
+  },
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
@@ -541,7 +570,13 @@ require('lazy').setup({
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
-        -- rust_analyzer = {},
+        rust_analyzer = {},
+        elixirls = {},
+        angularls = {},
+        astro = {},
+        sqlls = {},
+        yamlls = {},
+        bashls = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -619,7 +654,7 @@ require('lazy').setup({
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
-        -- javascript = { { "prettierd", "prettier" } },
+        javascript = { { 'prettierd', 'prettier' } },
       },
     },
   },
@@ -728,6 +763,11 @@ require('lazy').setup({
       }
     end,
   },
+  -- {
+  --   'ellisonleao/gruvbox.nvim',
+  --   priority = 1000,
+  --   config = true,
+  -- },
 
   { -- You can easily change to a different colorscheme.
     -- Change the name of the colorscheme plugin below, and then
@@ -745,6 +785,9 @@ require('lazy').setup({
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
     end,
+    opts = {
+      transparent = true,
+    },
   },
 
   -- Highlight todo, notes, etc in comments
